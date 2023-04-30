@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package user;
+
+import "proto/google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/chithien0909/user;userpb";
+
+message User {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string password = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message CreateUserRequest {
+  string name = 1;
+  string email = 2;
+  string password = 3;
+}
+
+message UpdateUserRequest {
+  string id = 1 ;
+  oneof optional_user {
+    string name = 2;
+    string email = 3;
+    string password = 4;
+  }
+}
+
+message UserReq {
+  string id = 1;
+}
+
+
+message DeleteUserResponse {
+  string id = 1;
+}
+
+message FindUsersRequest {
+  int64 page = 1;
+  int64 limit = 2;
+  oneof optional_user {
+    string name = 3;
+    string email = 4;
+  }
+  oneof sort {
+    string sort_by = 5;
+    string sort_type = 6;
+  }
+}
+
+message FindUsersResponse {
+  repeated User users = 1;
+  int64 total = 2;
+  int64 total_page = 3;
+}
+
+message FindManyUserCountResponse {
+  int64 total = 1;
+}
+
+service UserService {
+  rpc CreateUser (CreateUserRequest) returns (User) {
+    option (google.api.http) = {
+      post: "/v1/users",
+      body: "*",
+    };
+  }
+  rpc UpdateUser (UpdateUserRequest) returns (User) {
+    option (google.api.http) = {
+      patch: "/v1/users/{id}",
+      body: "*",
+    };
+  }
+  rpc DeleteUser (UserReq) returns (DeleteUserResponse) {
+    option (google.api.http) = {
+      delete: "/v1/users/{id}",
+    };
+  }
+  rpc FindUser (UserReq) returns (User) {
+    option (google.api.http) = {
+      get: "/v1/users/{id}",
+    };
+  }
+  rpc FindUsers(FindUsersRequest) returns (FindUsersResponse) {
+    option (google.api.http) = {
+      get: "/v1/users",
+    };
+  }
+  rpc FindManyUserCount (FindUsersRequest) returns (FindManyUserCountResponse) {
+    option (google.api.http) = {
+      get: "/v1/users/count",
+    };
+  }
+}

@@ -1,6 +1,7 @@
 version: '3'
 services:
   prisma:
+    container_name: demo-prisma
     image: prismagraphql/prisma:1.34
     restart: always
     ports:
@@ -13,7 +14,9 @@ services:
             connector: mongo
             uri: mongodb://prisma:prisma@mongo
   mongo:
-    image: mongo:3.6
+    container_name: demo-prisma-mongo
+    image: mongo:5.0.17
+    platform: linux/arm64/v8
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: prisma
@@ -21,6 +24,6 @@ services:
     ports:
       - '27017:27017'
     volumes:
-      - mongo:/var/lib/mongo
+      - ./mongo:/var/lib/mongo
 volumes:
   mongo: ~
