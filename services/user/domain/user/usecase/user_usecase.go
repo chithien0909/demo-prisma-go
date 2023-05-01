@@ -1,25 +1,28 @@
 package usecase
 
 import (
-	"prisma-go/prisma/generated/prisma-client"
+	"prisma-go/prisma/db"
 )
 
 type UserUseCase interface {
 	findUserUseCase
+	createUserUseCase
+	updateUserUseCase
+	deleteUserUseCase
 }
 
 type userUseCaseImpl struct {
-	prisma *prisma.Client
+	db *db.PrismaClient
 
 	//validate *validator.Validate
 }
 
 func NewUserUseCase(
-	prisma *prisma.Client,
+	db *db.PrismaClient,
 	// requestValidate *validator.Validate,
 ) UserUseCase {
 	return &userUseCaseImpl{
-		prisma: prisma,
+		db: db,
 		//validate: requestValidate,
 	}
 }

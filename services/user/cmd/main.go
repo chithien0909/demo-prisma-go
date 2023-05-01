@@ -6,7 +6,7 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"net"
-	"prisma-go/prisma/generated/prisma-client"
+	"prisma-go/prisma/db"
 	gen "prisma-go/proto/proto/user"
 	"prisma-go/services/user/config"
 	"prisma-go/services/user/delivery/grpc/handler"
@@ -25,7 +25,17 @@ func main() {
 
 	s := grpc.NewServer()
 
-	client := prisma.New(nil)
+	client := db.NewClient()
+
+	if err := client.Prisma.Connect(); err != nil {
+		panic(err)
+	}
+
+	defer func() {
+		if err := client.Prisma.Disconnect(); err != nil {
+			panic(err)
+		}
+	}()
 
 	userUseCase := usecase.NewUserUseCase(client)
 	userHandler := handler.NewUserHandler(userUseCase)

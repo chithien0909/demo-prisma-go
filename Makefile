@@ -3,8 +3,11 @@
 deploy:
 	prisma1 deploy
 
-gen:
+gen-1:
 	prisma1 generate
+
+gen:
+	go run github.com/prisma/prisma-client-go generate
 
 grpc:
 	buf generate
